@@ -154,7 +154,7 @@
             border: 0px;
             width: 100%;
             outline: none;
-            text-align: right; /* 숫자 오른쪽 정렬로 복구 */
+            text-align: right;
         }
         
         /* 합산 필드의 커서 모양을 기본으로 변경 (편집 불가능임을 시각적으로 나타냄) */
@@ -359,10 +359,10 @@
 
             // 합산 결과를 sumInput에 표시합니다.
             if (sumInput) {
-                // 합계가 0이면 빈 문자열로 표시하고, 그렇지 않으면 숫자로 표시
-                sumInput.value = totalSum > 0 ? totalSum.toString() : '';
+                // totalSum이 0이더라도 0을 표시합니다.
+                sumInput.value = totalSum >= 0 ? totalSum.toString() : ''; 
                 
-                // sum 항목의 active 상태 업데이트 (값이 있으면 활성화)
+                // sum 항목의 active 상태 업데이트 (값이 0이라도 있으면 활성화)
                 updateActiveState(sumInput);
             }
         }
@@ -416,11 +416,9 @@
 
                 // 'blur' 이벤트: 포커스를 잃었을 때 (다른 창으로 이동 시) 선행 0 제거 및 상태 업데이트
                 input.addEventListener('blur', function() {
-                    // ✅ 포커스를 잃었을 때 선행 0 자동 삭제 로직 추가 (sumInput이 아닌 경우에만 적용)
+                    // 포커스를 잃었을 때 선행 0 자동 삭제 로직 추가 (sumInput이 아닌 경우에만 적용)
                     if (this.id !== 'sumInput') {
                         if (this.value.length > 0) {
-                            // 입력된 문자열을 정수로 변환하여 선행 0 제거.
-                            // 값이 '0'만 있을 경우 '0'으로 유지 ( parseInt('0', 10) === 0 )
                             const numericValue = parseInt(this.value, 10);
                             
                             // 값이 NaN이 아니면 (즉, 숫자이면) 값을 업데이트
