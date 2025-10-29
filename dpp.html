@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주사위 풀 파티 웹 계산기</title>
+    <style>
+        /* (CSS 코드는 이전과 동일하며, 편의상 생략합니다.) */
+        body {
+            display: flex;
+            width: 100%;
+            min-width: 320px;
+            margin: 0;
+            padding-bottom: 1.875rem;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 1.875rem;
+            background: #D4FFFD;
+        }
+
+        .container {
+            display: flex;
+            width: 16.875rem;
+            padding: 0 1.875rem;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1.25rem;
+        }
+
+        .header_wrap {
+            display: flex;
+            width: 100%;
+            background: #6EC2F6;
+            justify-content: center;
+        }
+
+        .header {
+            width: 16.875rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            align-self: stretch;
+        }
+
+        .header .logo img {
+            width: 4.37569rem;
+            height: 3.25406rem;
+            flex-shrink: 0;
+        }
+
+        .refresh {
+            display: flex;
+            width: 2.75rem;
+            height: 2.75rem;
+            padding: 0.8125rem 0.6875rem;
+            justify-content: center;
+            align-items: center;
+            gap: 0.625rem;
+            cursor: pointer; /* 새로고침 버튼임을 시각적으로 나타냅니다. (추가) */
+        }
+
+        .refresh img {
+            width: 1.6rem;
+            height: 1.6rem;
+        }
+
+
+        .dice_list {
+            display: flex;
+            align-items: center;
+            gap: 1.8rem;
+            position: relative; /* 아이콘 배치를 위한 기준점 */
+        }
+
+        /* 1. 빨간색 사각형 */
+        .red-box {
+            width: 3.75rem;
+            height: 3.75rem;
+            aspect-ratio: 1/1;
+        }
+        
+        .red-box img {
+            width: 100%;
+            height: 100%;
+        }
+        /* 2. 회색 배경의 박스 */
+        .info-box {
+            display: flex;
+            min-width: 6.4375rem; /* width 대신 min-width 사용 */
+            height: 3.75rem;
+            padding: 0 1.875rem;
+            align-items: center;
+            gap: 0.625rem;
+            border-radius: 0.5rem;
+            border: 2px solid #AAA;
+            background: #FFF;
+            cursor: pointer; /* 클릭 가능한 요소임을 표시 */
+            transition: border-color 0.3s;
+        }
+
+        /* info-box 클릭 활성화 스타일 (active 클래스가 dice_list에 있을 때) */
+        .dice_list.active .info-box {
+            border-color: #40ACEF; /* 활성화 시 파란색 테두리 */
+        }
+
+
+        /* 3. 체크 표시 아이콘 - 기본 (비활성) 스타일: '흰 바탕에 회색 라인' */
+        .verified-icon {
+            display: flex;
+            width: 1rem;
+            height: 1rem;
+            padding: 0.625rem;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 50%;
+            /* 아이콘 위치 재조정: red-box의 너비(3.75rem)와 gap(1.8rem)을 고려한 중앙 위치 */
+            left: calc(4.75rem + 1.8rem / 2); /* 4.7rem 대신 3.75rem 사용 (red-box 너비) */
+            transform: translateY(-50%) translateX(-50%); /* 정확한 중앙 정렬 */
+            
+            border-radius: 50%;
+            background: #FFF; /* 흰 바탕 */
+            border: 2px solid #AAA; /* 회색 라인 */
+            transition: all 0.3s;
+        }
+
+        /* 기본 아이콘: 체크 모양은 투명/없음 (요청에 따라 기본 상태는 체크 없는 원형을 가정) */
+        .verified-icon::after {
+            content: '';
+            width: 6px;
+            height: 12px;
+            border: solid transparent; /* 기본 상태는 투명 */
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+            margin-top: -5px;
+            transition: border-color 0.3s;
+        }
+
+        /* === 활성화 스타일 (.dice_list에 .active 클래스가 있을 때) === */
+        /* 하늘색 배경에 흰색 체크 아이콘 */
+        .dice_list.active .verified-icon {
+            background: #40ACEF; /* 하늘색 배경 */
+            border-color: #FFF; /* 흰색 테두리 (경계면 흰색처럼 보이도록) */
+        }
+        
+        /* 체크 표시 - 활성화 스타일 (흰색으로 보이게) */
+        .dice_list.active .verified-icon::after {
+            border-color: white; /* 흰색 체크 표시 */
+        }
+
+
+        /* 4. 숫자 입력란 스타일 유지 */
+        input {
+            border: 0px;
+            width: 100%;
+            outline: none; /* 포커스 시 기본 테두리 제거 */
+            text-align: left; /* 숫자 오른쪽 정렬 */
+        }
+        
+        /* 합산 필드의 커서 모양을 기본으로 변경 (편집 불가능임을 시각적으로 나타냄) */
+        #sumInput {
+            cursor: default; 
+        }
+
+        .number {
+            color: #000;
+            font-family: "Noto Sans", sans-serif;
+            font-size: 1.875rem;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 150%;
+            letter-spacing: -0.0375rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header_wrap">
+        <div class="header">
+            <div class="refresh" id="refreshButton"><img src="img/live area.png" alt="새로고침"></div>
+            <div class="logo"><img src="img/2b675c160f77bbc5227385192aa8f86df60a7931.png" alt="로고"></div>
+            <div class="refresh"></div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="dice_list" id="dice_pink">
+            <div class="red-box">
+                <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60" fill="none">
+                    <rect x="1.5" y="1.5" width="57" height="57" rx="6.5" fill="#FFBABA" stroke="#FF9696" stroke-width="3"/>
+                </svg>
+            </div>
+            <div class="verified-icon"></div>
+            <div class="info-box">
+                <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="number" value="" maxlength="6" aria-label="입력 숫자">
+            </div>
+        </div>
+
+        <div class="dice_list" id="dice_yellow">
+            <div class="red-box">
+                <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60" fill="none">
+                <rect x="1.5" y="1.5" width="57" height="57" rx="6.5" fill="#FFE078" stroke="#FFA658" stroke-width="3"/>
+                </svg>
+            </div>
+            <div class="verified-icon"></div>
+            <div class="info-box">
+                <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="number" value="" maxlength="6" aria-label="입력 숫자">
+            </div>
+        </div>
+
+        <div class="dice_list" id="dice_purple">
+            <div class="red-box">
+                <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60" fill="none">
+                <rect x="1.5" y="1.5" width="57" height="57" rx="6.5" fill="#D2A8FF" stroke="#9686F2" stroke-width="3"/>
+                </svg>
+            </div>
+            <div class="verified-icon"></div>
+            <div class="info-box">
+                <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="number" value="" maxlength="6" aria-label="입력 숫자">
+            </div>
+        </div>
+
+        <div class="dice_list" id="dice_green">
+            <div class="red-box">
+                <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60" fill="none">
+                <rect x="1.5" y="1.5" width="57" height="57" rx="6.5" fill="#BCF27B" stroke="#88BF46" stroke-width="3"/>
+                </svg>
+            </div>
+            <div class="verified-icon"></div>
+            <div class="info-box">
+                <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="number" value="" maxlength="6" aria-label="입력 숫자">
+            </div>
+        </div>
+
+        <div class="dice_list" id="dice_white">
+            <div class="red-box">
+                <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60" fill="none">
+                <rect x="1.5" y="1.5" width="57" height="57" rx="6.5" fill="white" stroke="#C7C7C7" stroke-width="3"/>
+                </svg>
+            </div>
+            <div class="verified-icon"></div>
+            <div class="info-box">
+                <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="number" value="" maxlength="6" aria-label="입력 숫자">
+            </div>
+        </div>
+
+        <div class="dice_list" id="dice_navy">
+            <div class="red-box">
+                <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60" fill="none">
+                <rect x="1.5" y="1.5" width="57" height="57" rx="6.5" fill="#155088" stroke="white" stroke-width="3"/>
+                </svg>
+            </div>
+            <div class="verified-icon"></div>
+            <div class="info-box">
+                <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="number" value="" maxlength="6" aria-label="입력 숫자">
+            </div>
+        </div>
+
+        <div class="dice_list" id="dice_pair">
+            <div class="red-box">
+                <img src="img/Property 1=pair.png" alt="페어 아이콘">
+            </div>
+            <div class="verified-icon"></div>
+            <div class="info-box">
+                <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="number" value="" maxlength="6" aria-label="입력 숫자">
+            </div>
+        </div>
+
+        <div class="dice_list" id="dice_ont">
+            <div class="red-box">
+                <img src="img/Property 1=onetwothree.png" alt="123 아이콘">
+            </div>
+            <div class="verified-icon"></div>
+            <div class="info-box">
+                <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="number" value="" maxlength="6" aria-label="입력 숫자">
+            </div>
+        </div>
+
+        <div class="dice_list" id="dice_four">
+            <div class="red-box">
+                <img src="img/Property 1=four.png" alt="4 아이콘">
+            </div>
+            <div class="verified-icon"></div>
+            <div class="info-box">
+                <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="number" value="" maxlength="6" aria-label="입력 숫자">
+            </div>
+        </div>
+
+        <div class="dice_list" id="dice_five">
+            <div class="red-box">
+                <img src="img/Property 1=five.png" alt="5 아이콘">
+            </div>
+            <div class="verified-icon"></div>
+            <div class="info-box">
+                <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="number" value="" maxlength="6" aria-label="입력 숫자">
+            </div>
+        </div>
+
+        <div class="dice_list" id="dice_six">
+            <div class="red-box">
+                <img src="img/Property 1=six.png" alt="6 아이콘">
+            </div>
+            <div class="verified-icon"></div>
+            <div class="info-box">
+                <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="number" value="" maxlength="6" aria-label="입력 숫자">
+            </div>
+        </div>
+
+        <div class="dice_list" id="dice_all">
+            <div class="red-box">
+                <img src="img/Property 1=all.png" alt="all 아이콘">
+            </div>
+            <div class="verified-icon"></div>
+            <div class="info-box">
+                <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="number" value="" maxlength="6" aria-label="입력 숫자">
+            </div>
+        </div>
+
+        <div class="dice_list" id="dice_sum">
+            <div class="red-box">
+                <img src="img/Property 1=sum.png" alt="sum 아이콘">
+            </div>
+            <!--<div class="verified-icon"></div>-->
+            <div class="info-box">
+                <input type="text" id="sumInput" class="number" value="" maxlength="6" aria-label="합산 결과 숫자" readonly>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // input 값의 존재 여부에 따라 active 클래스를 토글하는 함수
+        function updateActiveState(input) {
+            const diceList = input.closest('.dice_list');
+            if (!diceList) return;
+
+            // input 값이 비어있지 않으면 (공백 제거 후 길이가 0이 아니면) active 클래스 추가
+            if (input.value.trim().length > 0) {
+                diceList.classList.add('active');
+            }
+            // input 값이 비어있으면 active 클래스 제거
+            else {
+                diceList.classList.remove('active');
+            }
+        }
+        
+        // 12개 항목의 값을 합산하고 sum 항목에 표시하는 함수
+        function calculateSum() {
+            // #sumInput을 제외한 모든 입력 필드를 선택합니다. (총 12개)
+            const inputsToSum = document.querySelectorAll('.container .dice_list:not(#dice_sum) input');
+            const sumInput = document.getElementById('sumInput');
+            
+            let totalSum = 0;
+
+            inputsToSum.forEach(input => {
+                // 값이 숫자인 경우에만 합산합니다.
+                const value = parseInt(input.value.trim(), 10);
+                if (!isNaN(value) && input.value.trim().length > 0) {
+                    totalSum += value;
+                }
+            });
+
+            // 합산 결과를 sumInput에 표시합니다.
+            if (sumInput) {
+                // 합계가 0이면 빈 문자열로 표시하고, 그렇지 않으면 숫자로 표시
+                sumInput.value = totalSum > 0 ? totalSum.toString() : '';
+                
+                // sum 항목의 active 상태 업데이트 (값이 있으면 활성화)
+                updateActiveState(sumInput);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const infoBoxes = document.querySelectorAll('.info-box');
+            const inputs = document.querySelectorAll('.info-box input');
+            
+            // ===============================================
+            // ✅ 새로고침 버튼 기능 추가
+            const refreshButton = document.getElementById('refreshButton');
+            if (refreshButton) {
+                refreshButton.addEventListener('click', function() {
+                    // 페이지를 새로고침합니다.
+                    window.location.reload(); 
+                });
+            }
+            // ===============================================
+
+            // 1. info-box 클릭 이벤트 처리: 무조건 활성화하고, input에 포커스
+            infoBoxes.forEach(box => {
+                box.addEventListener('click', function() {
+                    const diceList = this.closest('.dice_list');
+                    const input = this.querySelector('input');
+                    
+                    if (diceList && input) {
+                        // sumInput (읽기 전용 필드)이 아니면 활성화 및 포커스
+                        if (input.id !== 'sumInput') {
+                            diceList.classList.add('active');
+                            input.focus();
+                        } else {
+                            // sumInput일 경우 포커스만 시도 (readonly이므로 입력은 안됨)
+                            input.focus();
+                        }
+                    }
+                });
+            });
+
+            // 2. input 값 변경 이벤트 처리: 값이 있으면 활성화 유지, 값이 없으면 비활성화
+            inputs.forEach(input => {
+                // 'input' 이벤트: 값이 바뀔 때마다 실행 (입력, 삭제, 붙여넣기 등)
+                input.addEventListener('input', function() {
+                    updateActiveState(this);
+                    
+                    // sumInput을 제외한 모든 입력에서 합산을 업데이트
+                    if (this.id !== 'sumInput') {
+                        calculateSum();
+                    }
+                });
+
+                // 'blur' 이벤트: 포커스를 잃었을 때도 상태 업데이트
+                input.addEventListener('blur', function() {
+                    updateActiveState(this);
+                });
+
+                // 페이지 로드 시 초기 상태 확인 (value가 미리 설정되어 있을 경우)
+                updateActiveState(input);
+            });
+            
+            // 페이지 로드 시 합산 값 초기 계산
+            calculateSum();
+        });
+    </script>
+
+</body>
+</html>
