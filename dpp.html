@@ -57,7 +57,7 @@
             justify-content: center;
             align-items: center;
             gap: 0.625rem;
-            cursor: pointer; /* 새로고침 버튼임을 시각적으로 나타냅니다. (추가) */
+            cursor: pointer;
         }
 
         .refresh img {
@@ -70,7 +70,7 @@
             display: flex;
             align-items: center;
             gap: 1.8rem;
-            position: relative; /* 아이콘 배치를 위한 기준점 */
+            position: relative;
         }
 
         /* 1. 빨간색 사각형 */
@@ -87,7 +87,7 @@
         /* 2. 회색 배경의 박스 */
         .info-box {
             display: flex;
-            min-width: 6.4375rem; /* width 대신 min-width 사용 */
+            min-width: 6.4375rem;
             height: 3.75rem;
             padding: 0 1.875rem;
             align-items: center;
@@ -95,13 +95,13 @@
             border-radius: 0.5rem;
             border: 2px solid #AAA;
             background: #FFF;
-            cursor: pointer; /* 클릭 가능한 요소임을 표시 */
+            cursor: pointer;
             transition: border-color 0.3s;
         }
 
         /* info-box 클릭 활성화 스타일 (active 클래스가 dice_list에 있을 때) */
         .dice_list.active .info-box {
-            border-color: #40ACEF; /* 활성화 시 파란색 테두리 */
+            border-color: #40ACEF;
         }
 
 
@@ -115,13 +115,12 @@
             align-items: center;
             position: absolute;
             top: 50%;
-            /* 아이콘 위치 재조정: red-box의 너비(3.75rem)와 gap(1.8rem)을 고려한 중앙 위치 */
-            left: calc(4.75rem + 1.8rem / 2); /* 4.7rem 대신 3.75rem 사용 (red-box 너비) */
-            transform: translateY(-50%) translateX(-50%); /* 정확한 중앙 정렬 */
+            left: calc(4.7rem + 1.8rem / 2); 
+            transform: translateY(-50%) translateX(-50%);
             
             border-radius: 50%;
-            background: #FFF; /* 흰 바탕 */
-            border: 2px solid #AAA; /* 회색 라인 */
+            background: #FFF;
+            border: 2px solid #AAA;
             transition: all 0.3s;
         }
 
@@ -130,7 +129,7 @@
             content: '';
             width: 6px;
             height: 12px;
-            border: solid transparent; /* 기본 상태는 투명 */
+            border: solid transparent;
             border-width: 0 2px 2px 0;
             transform: rotate(45deg);
             margin-top: -5px;
@@ -140,13 +139,13 @@
         /* === 활성화 스타일 (.dice_list에 .active 클래스가 있을 때) === */
         /* 하늘색 배경에 흰색 체크 아이콘 */
         .dice_list.active .verified-icon {
-            background: #40ACEF; /* 하늘색 배경 */
-            border-color: #FFF; /* 흰색 테두리 (경계면 흰색처럼 보이도록) */
+            background: #40ACEF;
+            border-color: #FFF;
         }
         
         /* 체크 표시 - 활성화 스타일 (흰색으로 보이게) */
         .dice_list.active .verified-icon::after {
-            border-color: white; /* 흰색 체크 표시 */
+            border-color: white;
         }
 
 
@@ -154,8 +153,8 @@
         input {
             border: 0px;
             width: 100%;
-            outline: none; /* 포커스 시 기본 테두리 제거 */
-            text-align: left; /* 숫자 오른쪽 정렬 */
+            outline: none;
+            text-align: right; /* 숫자 오른쪽 정렬로 복구 */
         }
         
         /* 합산 필드의 커서 모양을 기본으로 변경 (편집 불가능임을 시각적으로 나타냄) */
@@ -191,7 +190,7 @@
             </div>
             <div class="verified-icon"></div>
             <div class="info-box">
-                <input type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = parseInt(this.value, 10) || ''" class="number" value="" maxlength="2" aria-label="입력 숫자">
+                <input type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="number" value="" maxlength="2" aria-label="입력 숫자">
             </div>
         </div>
 
@@ -203,7 +202,7 @@
             </div>
             <div class="verified-icon"></div>
             <div class="info-box">
-                <input type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = parseInt(this.value, 10) || ''" class="number" value="" maxlength="2" aria-label="입력 숫자">
+                <input type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="number" value="" maxlength="2" aria-label="입력 숫자">
             </div>
         </div>
 
@@ -215,7 +214,7 @@
             </div>
             <div class="verified-icon"></div>
             <div class="info-box">
-                <input type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = parseInt(this.value, 10) || ''" class="number" value="" maxlength="2" aria-label="입력 숫자">
+                <input type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="number" value="" maxlength="2" aria-label="입력 숫자">
             </div>
         </div>
 
@@ -227,7 +226,7 @@
             </div>
             <div class="verified-icon"></div>
             <div class="info-box">
-                <input type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = parseInt(this.value, 10) || ''" class="number" value="" maxlength="2" aria-label="입력 숫자">
+                <input type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="number" value="" maxlength="2" aria-label="입력 숫자">
             </div>
         </div>
 
@@ -239,7 +238,7 @@
             </div>
             <div class="verified-icon"></div>
             <div class="info-box">
-                <input type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = parseInt(this.value, 10) || ''" class="number" value="" maxlength="2" aria-label="입력 숫자">
+                <input type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="number" value="" maxlength="2" aria-label="입력 숫자">
             </div>
         </div>
 
@@ -251,7 +250,7 @@
             </div>
             <div class="verified-icon"></div>
             <div class="info-box">
-                <input type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = parseInt(this.value, 10) || ''" class="number" value="" maxlength="2" aria-label="입력 숫자">
+                <input type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="number" value="" maxlength="2" aria-label="입력 숫자">
             </div>
         </div>
 
@@ -261,7 +260,7 @@
             </div>
             <div class="verified-icon"></div>
             <div class="info-box">
-                <input type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = parseInt(this.value, 10) || ''" class="number" value="" maxlength="2" aria-label="입력 숫자">
+                <input type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="number" value="" maxlength="2" aria-label="입력 숫자">
             </div>
         </div>
 
@@ -271,7 +270,7 @@
             </div>
             <div class="verified-icon"></div>
             <div class="info-box">
-                <input type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = parseInt(this.value, 10) || ''" class="number" value="" maxlength="2" aria-label="입력 숫자">
+                <input type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="number" value="" maxlength="2" aria-label="입력 숫자">
             </div>
         </div>
 
@@ -281,7 +280,7 @@
             </div>
             <div class="verified-icon"></div>
             <div class="info-box">
-                <input type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = parseInt(this.value, 10) || ''" class="number" value="" maxlength="2" aria-label="입력 숫자">
+                <input type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="number" value="" maxlength="2" aria-label="입력 숫자">
             </div>
         </div>
 
@@ -291,7 +290,7 @@
             </div>
             <div class="verified-icon"></div>
             <div class="info-box">
-                <input type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = parseInt(this.value, 10) || ''" class="number" value="" maxlength="2" aria-label="입력 숫자">
+                <input type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="number" value="" maxlength="2" aria-label="입력 숫자">
             </div>
         </div>
 
@@ -301,7 +300,7 @@
             </div>
             <div class="verified-icon"></div>
             <div class="info-box">
-                <input type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = parseInt(this.value, 10) || ''" class="number" value="" maxlength="2" aria-label="입력 숫자">
+                <input type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="number" value="" maxlength="2" aria-label="입력 숫자">
             </div>
         </div>
 
@@ -311,7 +310,7 @@
             </div>
             <div class="verified-icon"></div>
             <div class="info-box">
-                <input type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = parseInt(this.value, 10) || ''" class="number" value="" maxlength="2" aria-label="입력 숫자">
+                <input type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="number" value="" maxlength="2" aria-label="입력 숫자">
             </div>
         </div>
 
@@ -319,7 +318,6 @@
             <div class="red-box">
                 <img src="img/Property 1=sum.png" alt="sum 아이콘">
             </div>
-            <!--<div class="verified-icon"></div>-->
             <div class="info-box">
                 <input type="text" id="sumInput" class="number" value="" maxlength="6" aria-label="합산 결과 숫자" readonly>
             </div>
@@ -371,14 +369,14 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             const infoBoxes = document.querySelectorAll('.info-box');
+            // #sumInput을 포함한 모든 input 요소
             const inputs = document.querySelectorAll('.info-box input');
             
             // ===============================================
-            // ✅ 새로고침 버튼 기능 추가
+            // 새로고침 버튼 기능
             const refreshButton = document.getElementById('refreshButton');
             if (refreshButton) {
                 refreshButton.addEventListener('click', function() {
-                    // 페이지를 새로고침합니다.
                     window.location.reload(); 
                 });
             }
@@ -403,30 +401,43 @@
                 });
             });
 
-            // 2. input 값 변경 이벤트 처리: 값이 있으면 활성화 유지, 값이 없으면 비활성화
+            // 2. input 값 변경 이벤트 처리: (입력 중에는 선행 0을 유지)
             inputs.forEach(input => {
-                // 'input' 이벤트: 값이 바뀔 때마다 실행 (입력, 삭제, 붙여넣기 등)
+                
+                // 'input' 이벤트: 값이 바뀔 때마다 실행 (입력 중에는 선행 0 유지)
                 input.addEventListener('input', function() {
-                    // ✅ 선행 0 자동 삭제 로직 추가 (oninput 속성에서도 처리되지만, JavaScript에서도 일관성 있게 처리)
-                    if (this.id !== 'sumInput') {
-                        // 현재 value를 정수로 변환하여 선행 0 제거. NaN이거나 0일 경우 빈 문자열로 처리.
-                        this.value = parseInt(this.value, 10) || (this.value === '0' ? '0' : '');
-                    }
-
+                    // 입력 중에는 포커스 및 합산 상태만 업데이트
                     updateActiveState(this);
                     
-                    // sumInput을 제외한 모든 입력에서 합산을 업데이트
                     if (this.id !== 'sumInput') {
                         calculateSum();
                     }
                 });
 
-                // 'blur' 이벤트: 포커스를 잃었을 때도 상태 업데이트
+                // 'blur' 이벤트: 포커스를 잃었을 때 (다른 창으로 이동 시) 선행 0 제거 및 상태 업데이트
                 input.addEventListener('blur', function() {
+                    // ✅ 포커스를 잃었을 때 선행 0 자동 삭제 로직 추가 (sumInput이 아닌 경우에만 적용)
+                    if (this.id !== 'sumInput') {
+                        if (this.value.length > 0) {
+                            // 입력된 문자열을 정수로 변환하여 선행 0 제거.
+                            // 값이 '0'만 있을 경우 '0'으로 유지 ( parseInt('0', 10) === 0 )
+                            const numericValue = parseInt(this.value, 10);
+                            
+                            // 값이 NaN이 아니면 (즉, 숫자이면) 값을 업데이트
+                            if (!isNaN(numericValue)) {
+                                // 0을 제외한 모든 선행 0을 제거하고, 값이 없으면 빈 문자열로 처리
+                                this.value = numericValue === 0 ? (this.value.trim() === '0' ? '0' : '') : numericValue.toString();
+                            }
+                        }
+                        // 선행 0 제거 후 합산 업데이트
+                        calculateSum();
+                    }
+                    
+                    // 선행 0 제거 후 Active 상태 다시 업데이트
                     updateActiveState(this);
                 });
 
-                // 페이지 로드 시 초기 상태 확인 (value가 미리 설정되어 있을 경우)
+                // 페이지 로드 시 초기 상태 확인
                 updateActiveState(input);
             });
             
